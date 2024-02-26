@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class StorageReader{
+public class StorageReader {
     private static StorageReader instance;
     private List<Product> products;
 
@@ -28,16 +28,19 @@ public class StorageReader{
 
     private void readStorageFile() {
         DatabaseManager databaseManager = new DatabaseManager();
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         AidClass aidClass = null;
         try {
-            aidClass = mapper.readValue(new File("src/main/resources/storage.json"), new TypeReference<AidClass>() {
-            });
+            aidClass = objectMapper.readValue(new File("src/main/resources/storage.json"), AidClass.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for(int i=0; i<aidClass.getArrayList().size(); i++){
-            databaseManager.write(aidClass.getArrayList().get(i));
+        List<Product> list = databaseManager.read();
+        if (list.isEmpty()) {
+            for (int i = 0; i < aidClass.getArrayList().size(); i++) {
+                System.out.println(aidClass.getArrayList().get(i) + "////");
+                databaseManager.write(aidClass.getArrayList().get(i));
+            }
         }
     }
 }

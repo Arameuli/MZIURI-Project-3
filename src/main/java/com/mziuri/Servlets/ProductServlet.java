@@ -18,11 +18,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.util.List;
 
 @WebServlet("/store/product")
 public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String productName = req.getParameter("name");
+        DatabaseManager databaseManager = new DatabaseManager();
+        List<Product> list = databaseManager.read();
+        for(int i=0; i<list.size(); i++){
+            if (list.get(i).getProd_name().equals(productName)){
+                int amount = list.get(i).getProd_amount();
+                float price = list.get(i).getProd_price();
+            }
+        }
 
     }
 
@@ -40,15 +50,15 @@ public class ProductServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         DatabaseManager databaseManager = new DatabaseManager();
-//        ObjectMapper mapper = new ObjectMapper();
-//        AidClass aidClass = null;
-//        try {
-//            aidClass = mapper.readValue(new File("src/main/resources/storage.json"), new TypeReference<AidClass>() {
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        if ("asd".equals(password) && databaseManager.nameCheck(name)) {
+        ObjectMapper mapper = new ObjectMapper();
+        AidClass aidClass = null;
+        try {
+            aidClass = mapper.readValue(new File("src/main/resources/storage.json"), new TypeReference<AidClass>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (aidClass.getPassword().equals(password) && databaseManager.nameCheck(name)) {
             databaseManager.updateProductAmount(name, amount);
         } else {
             resp.setStatus(405);

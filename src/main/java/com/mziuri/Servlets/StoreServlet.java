@@ -13,5 +13,6 @@ import java.io.IOException;
 public class StoreServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        StorageReader storageReader = new StorageReader();
     }
 }

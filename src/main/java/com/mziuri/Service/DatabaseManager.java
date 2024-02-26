@@ -47,7 +47,7 @@ public class DatabaseManager {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("candy");
         EntityManager entityManager = factory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(product);
+        entityManager.merge(product);
         entityManager.getTransaction().commit();
         entityManager.close();
         factory.close();
@@ -57,7 +57,7 @@ public class DatabaseManager {
         boolean tr = false;
         List<Product> list = read();
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(name)) {
+            if (list.get(i).getProd_name().equals(name)) {
                 tr = true;
             }
         }

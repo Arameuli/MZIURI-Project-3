@@ -1,23 +1,26 @@
 function purchase(productName) {
-console.log(productName);
-    openProductsPopup(productName);
-    }
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/candy-shop/store/product?name=" + encodeURIComponent(productName), true);
+        xhr.setRequestHeader("Content-Type", "application/json");
 
-function openProductsPopup(productName) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/candy-shop/store/product?name=" + encodeURIComponent(productName), true);
-    xhr.setRequestHeader("Content-Type", "text/plain");
+        xhr.onreadystatechange = function () {
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log("Response from server: " + xhr.responseText);
-        }
-    };
-    xhr.send();
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var amount = response.amount;
+                var price = response.price;
 
-    window.open("products.html", "Storage", "width=400,height=400");
+                    console.log(amount);
+                    console.log(price);
+                localStorage.setItem('productName', productName);
+                localStorage.setItem('amount', amount);
+                localStorage.setItem('price', price);
+
+                window.open("products.html", "Storage", "width=400,height=400");
+            }
+        };
+        xhr.send()
 }
-
 
 function openStoragePopup() {
     var width = 400;
@@ -27,7 +30,7 @@ function openStoragePopup() {
     var features = `width=${width},height=${height},left=${left},top=${top}`;
 
     window.open("storage.html", "Storage", features);
-    }
+}
 
    window.onload = function() {
         var xhr = new XMLHttpRequest();

@@ -78,5 +78,19 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+    public void buyProduct(String productName, int firstAmount) {
+        String sql = "UPDATE product SET prod_amount = prod_amount - ? WHERE prod_name = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/candyshop", "root", "root");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, firstAmount);
+            pstmt.setString(2, productName);
+
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println(rowsAffected + " row(s) updated.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

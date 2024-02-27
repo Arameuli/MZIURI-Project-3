@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.List;
 
+import org.json.JSONObject;
+
 @WebServlet("/store/product")
 public class ProductServlet extends HttpServlet {
     @Override
@@ -27,10 +29,27 @@ public class ProductServlet extends HttpServlet {
         String productName = req.getParameter("name");
         DatabaseManager databaseManager = new DatabaseManager();
         List<Product> list = databaseManager.read();
-        for(int i=0; i<list.size(); i++){
-            if (list.get(i).getProd_name().equals(productName)){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getProd_name().equals(productName)) {
                 int amount = list.get(i).getProd_amount();
                 float price = list.get(i).getProd_price();
+//                req.setAttribute("productName", productName);
+//                req.setAttribute("amount", amount);
+//                req.setAttribute("price", price);
+//
+//                req.getRequestDispatcher("/store/product").forward(req, resp);
+//                return;
+
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("productName", productName);
+                jsonResponse.put("amount", amount);
+                jsonResponse.put("price", price);
+
+                resp.setContentType("application/json");
+
+                resp.getWriter().write(jsonResponse.toString());
+
+                break;
             }
         }
 
@@ -38,6 +57,17 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
+        String productName = req.getParameter("productName");
+        int firstAmount = Integer.parseInt(req.getParameter("amount"));
+        int amount = Integer.parseInt(req.getParameter("quantity"));
+        System.out.println(productName + " " + firstAmount + " " + amount);
+        DatabaseManager databaseManager = new DatabaseManager();
+        if(amount <= firstAmount){
+            databaseManager.buyProduct(productName, amount);
+        }else{
+            resp.setStatus(405);
+        }
 
     }
 

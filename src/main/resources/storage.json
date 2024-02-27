@@ -3,7 +3,7 @@
 	"products": [
 		{
 			"prod_id": 1,
-			"prod_name": "Snickers",
+			"prod_name": "Snicker",
 			"prod_price": 2.10,
 			"prod_amount": 10
 		},
